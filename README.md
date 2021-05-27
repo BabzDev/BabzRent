@@ -9,6 +9,8 @@ Once you have your DB up and running the your settings have been amended, you ne
 
 Update-Database
 
+You will then need to build your solution. If things went ok you should have a working solution. 
+
 
 Further word of warning.
 
