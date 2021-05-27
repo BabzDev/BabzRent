@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 
 namespace BabzRent
 {
@@ -36,6 +39,18 @@ namespace BabzRent
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var culturesSupported = new[]
+                {
+                    new CultureInfo("en-GB")
+                };
+                options.DefaultRequestCulture = new RequestCulture("en-GB");
+/*                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-GB");
+                CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-GB");*/
+                options.SupportedCultures = culturesSupported;
+                options.SupportedUICultures = culturesSupported;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +71,9 @@ namespace BabzRent
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            var localizationOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseAuthentication();
             app.UseAuthorization();
