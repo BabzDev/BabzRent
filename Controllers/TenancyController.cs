@@ -76,7 +76,7 @@ namespace BabzRent.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult SaveTenancy(TenancyFormViewModel viewModel)
         {
-            var tenancyRepo = new TenancyRepository();
+            var tenancyRepo = new TenancyRepository(_context);
             tenancyRepo.SaveTenancy(viewModel);
 
             return RedirectToAction("Index", "Tenancy");
