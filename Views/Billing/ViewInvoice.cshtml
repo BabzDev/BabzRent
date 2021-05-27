@@ -1,0 +1,81 @@
+﻿@model BabzRent.ViewModels.BillingViewModels.ViewInvoiceViewModel
+@{
+    ViewBag.Title = "InvoiceView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        @if (Model.EditStatus == false)
+        {
+            <td>@Html.ActionLink("Edit Invoice", "EditInvoice", "Billing", new { id = Model.Invoice.Id }, new { @class = "btn btn-primary" })</td>
+            <td>@Html.ActionLink("Preview Invoice", "InvoicePreview", "Billing", new { invoiceid = Model.Invoice.Id }, new { @class = "btn btn-primary" })</td>
+            <td>@Html.ActionLink("Save PDF Invoice", "SavePdf", "Billing", new { invoiceid = Model.Invoice.Id }, new { @class = "btn btn-primary" })</td>
+        }
+        else
+        {
+            <td>@Html.ActionLink("Delete Invoice", "DeleteInvoice", "Billing", new { invoiceId = Model.Invoice.Id }, new { @class = "btn btn-primary" })</td>
+        }
+        <td>@Html.ActionLink("Issue Invoice", "IssueInvoice", "Billing", new { invoiceId = Model.Invoice.Id }, new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+
+<h2>InvoiceView</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>Invoice Id</td>
+            <td>TenancyId</td>
+            <td>Property</td>
+            <td>Amount</td>
+            <td>DateCreated</td>
+            <td>DueDate</td>
+            <td>Issued</td>
+            <td>Settled</td>
+        </tr>
+    </thead>
+    <tr>
+        <td>@Model.Invoice.Id</td>
+        <td>@Model.Tenancy.Name</td>
+        <td>@Model.Invoice.Tenancy.PropertyId</td>
+        <td>@Model.Invoice.Amount</td>
+        <td>@Model.Invoice.DateCreated.ToShortDateString()</td>
+        <td>@Model.Invoice.DueDate.ToShortDateString()</td>
+        <td>@Model.Invoice.DateIssued</td>
+        <td>@Model.Invoice.DateSettled</td>
+    </tr>
+</table>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>Bill Id</td>
+            <td>Bill Type Id</td>
+            <td>Amount</td>
+            <td>Issue Date</td>
+            <td>Invoice Status</td>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var bill in Model.Bills)
+            {
+                <tr>
+                    <td>@bill.Id @if (Model.EditStatus == true) {@Html.ActionLink("(Delete)", "DeleteBillFromInvoice", "Billing", new { invoiceId = Model.Invoice.Id, billId = bill.Id }, null)} </td>
+                    <td>@bill.BillType.Name</td>
+                    <td>@bill.Amount</td>
+                    <td>@bill.DateCreated.ToShortDateString()</td>
+                    <td>@bill.InvoiceStatus.Description</td>
+                </tr>
+            }
+    </tbody>
+</table>

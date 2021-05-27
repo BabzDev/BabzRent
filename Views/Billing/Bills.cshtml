@@ -1,0 +1,73 @@
+﻿@model BabzRent.ViewModels.BillingViewModels.BillsIndexViewModel
+
+@{
+    var tenancyName = new BabzRent.Models.Tenancies.TenancyNames();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        @if (ViewBag.Title != "Archive")
+        {
+            <td>@Html.ActionLink("Bills Archive", "BillsArchive", "Billing", new { @class = "btn btn-primary" })</td>
+            <td>@Html.ActionLink("Create Rent Bills at Location", "CreateRentBillsAtLocationForm", "Billing", new { @class = "btn btn-primary" })</td>
+            <td>@Html.ActionLink("Create Static Bill", "StaticBillForm", "Billing", new { @class = "btn btn-primary" })</td>
+        }
+
+    </tr>
+</table>
+
+<h2>Billing - @ViewBag.Title</h2>
+
+@foreach (var location in Model.PropertyLocations)
+{
+    <h2>@location.ShortCode</h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td>Bill Id</td>
+                <td>Property Id</td>
+                <td>Bill Type Id</td>
+                <td>Amount</td>
+                <td>Issue Date</td>
+                <td>Invoice Status</td>
+                <td>Tenancy</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var property in Model.Properties.Where(p => p.PropertyLocationId == location.Id))
+            {
+                foreach (var bill in Model.Bills.Where(b => b.PropertyId == property.Id).ToList())
+                {
+                    <tr>
+                        <td>@Html.ActionLink(@bill.Id.ToString(), "EditBill", "Billing", new { billId = bill.Id }, null) </td>
+                        <td>@bill.Property.PropertyName</td>
+                        <td>@bill.BillType.Name</td>
+                        <td>@bill.Amount</td>
+                        <td>@bill.DateCreated.ToShortDateString()</td>
+                        <td>@bill.InvoiceStatus.Description</td>
+                        @{
+                            tenancyName = Model.TenancyNames.SingleOrDefault(n => n.Id == bill.TenancyId);
+                            if (tenancyName != null)
+                            {
+                                <td>@tenancyName.Name</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

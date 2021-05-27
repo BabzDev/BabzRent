@@ -1,0 +1,85 @@
+﻿@model BabzRent.Models.Properties.PropertyLocation
+@{
+    ViewBag.Title = "LocationForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>Location</h2>
+@using (Html.BeginForm("SaveLocation", "Property"))
+{
+    <table>
+        <tr>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ShortCode)
+                    @Html.TextBoxFor(m => m.ShortCode, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.ShortCode)
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BuildingName)
+                    @Html.TextBoxFor(m => m.BuildingName, new { @class = "form-control" })
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Street)
+                    @Html.TextBoxFor(m => m.Street, new { @class = "form-control" })
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AddressLine2)
+                    @Html.TextBoxFor(m => m.AddressLine2, new { @class = "form-control" })
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.PostCode)
+                    @Html.TextBoxFor(m => m.PostCode, new { @class = "form-control" })
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.City)
+                    @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.City)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.County)
+                    @Html.TextBoxFor(m => m.County, new { @class = "form-control" })
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Country)
+                    @Html.TextBoxFor(m => m.Country, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Country)
+                </div>
+            </td>
+            <td>
+                @Html.HiddenFor(m => m.Id)
+                <button type="submit" class="btn btn-primary">Save</button>
+            </td>
+        </tr>
+    </table>
+
+
+
+}

@@ -1,0 +1,83 @@
+﻿@model BabzRent.ViewModels.TenancyFormViewModel
+@{
+    ViewBag.Title = "TenancyForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>TenancyForm</h2>
+
+@using (Html.BeginForm("SaveTenancy", "Tenancy"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tenancy.PropertyId)
+        @Html.DropDownListFor(m => m.Tenancy.PropertyId, new SelectList(Model.Properties, "Id", "PropertyName"), "Select Tenant", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tenancy.TenantId) @Html.ActionLink("(Add New Tenant)", "New", "Tenants", new { id = 1 }, new { target = "_blank" })
+        @Html.DropDownListFor(m => m.Tenancy.TenantId, new SelectList(Model.Tenants, "Id", "Name"), "Select Tenant", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tenancy.Tenant2Id)
+        @Html.DropDownListFor(m => m.Tenancy.Tenant2Id, new SelectList(Model.Tenants, "Id", "Name"), "Select Tenant", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tenancy.Tenant3Id)
+        @Html.DropDownListFor(m => m.Tenancy.Tenant3Id, new SelectList(Model.Tenants, "Id", "Name"), "Select Tenant", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tenancy.Tenant4Id)
+        @Html.DropDownListFor(m => m.Tenancy.Tenant4Id, new SelectList(Model.Tenants, "Id", "Name"), "Select Tenant", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tenancy.MoveInDate)
+        @Html.TextBoxFor(m => m.Tenancy.MoveInDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tenancy.MoveOutDate)
+        @Html.TextBoxFor(m => m.Tenancy.MoveOutDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tenancy.Deposit)
+        @Html.TextBoxFor(m => m.Tenancy.Deposit, new { @class = "form-control" })
+    </div>
+    @Html.HiddenFor(m => m.Tenancy.Id)
+
+    if (Model.Tenancy.Id == 0)
+    {
+        <h3>Contract Form</h3>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Contract.ContractStartDate) *
+            @Html.TextBoxFor(m => m.Contract.ContractStartDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Contract.ContractDuration) *
+            @Html.TextBoxFor(m => m.Contract.ContractDuration, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Contract.ContractEndDate) (This will auto populate)
+            @Html.TextBoxFor(m => m.Contract.ContractEndDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Contract.BillingDate) *
+            @Html.TextBoxFor(m => m.Contract.BillingDate, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Contract.PaymentAmount) *
+            @Html.TextBoxFor(m => m.Contract.PaymentAmount, new { @class = "form-control" })
+        </div>
+        @Html.HiddenFor(m => m.Contract.Id)
+    }
+
+
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}

@@ -1,0 +1,68 @@
+﻿@model BabzRent.ViewModels.MeterViewModels.MeterIndexViewModel
+@using BabzRent.Models.Maintenance
+@{
+    var meterReading = new List<MeterReading>();
+    var lastReading = new MeterReading();
+}
+@{
+    ViewBag.Title = "Meters";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        <td>@Html.ActionLink("New Meter", "NewMeter", "Maintenance", new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+<h2>Meters</h2>
+
+@foreach (var location in Model.Locations)
+{
+    <h3>@location.ShortCode</h3>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Meter Id</th>
+                <th>Property</th>
+                <th>Meter Type</th>
+                <th>Meter Reading</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var meter in Model.Meter.Where(m => m.Property.PropertyLocationId == location.Id))
+            {
+                meterReading = Model.MeterReadings.Where(m => m.MeterId == meter.Id).ToList();
+
+                <tr>
+                    <td>@Html.ActionLink(@meter.Id.ToString(), "MeterDetails", "Maintenance", new { id = meter.Id }, null)</td>
+                    <td>@Html.ActionLink(@meter.Property.PropertyName, "PropertyDetails", "Property", new { id = meter.PropertyId }, null)</td>
+                    <td>@meter.BillType.Name</td>
+                    @if (meterReading.Count != 0)
+                    {
+                        lastReading = meterReading.LastOrDefault();
+                        <td>@Html.ActionLink(lastReading.Status.ToString(), "NewMeterReading", "Maintenance", new { id = meter.Id }, null)</td>
+                        <td>@lastReading.ReadingDate.ToShortDateString()</td>
+                    }
+                    else
+                    {
+                        <td>@Html.ActionLink("No Record", "NewMeterReading", "Maintenance", new { id = meter.Id }, null)</td>
+                        <td>N/A</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+

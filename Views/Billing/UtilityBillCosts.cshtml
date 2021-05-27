@@ -1,0 +1,65 @@
+﻿@model BabzRent.ViewModels.BillingViewModels.UtilityCostIndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+
+
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        <td>@Html.ActionLink("Update Utility Costs for all Properties at Location", "UpdateAllUtilityCostsForLocationForm", "Billing", new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+<h2>Utility Bill Costs</h2>
+
+@foreach (var location in Model.PropertyLocations)
+{
+    <h2>@location.ShortCode</h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Bill Type Id</th>
+                <th>Variable Cost 1</th>
+                <th>Variable Cost 2</th>
+                <th>Fixed Cost 1</th>
+                <th>Fixed Cost 2</th>
+                <th>Date Effective From</th>
+                <th>Date Effective Expiry</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var property in Model.Properties.Where(p => p.PropertyLocationId == location.Id))
+            {
+                foreach (var utilityCost in Model.UtilityCosts.Where(
+                    u => u.PropertyId == property.Id
+                    & (u.DateEffectiveExpiry == null || u.DateEffectiveExpiry >= DateTime.Now)))
+                {
+                    <tr>
+                        <td>@property.PropertyNo</td>
+                        <td>@utilityCost.Id</td>
+                        <td>@utilityCost.BillType.Name</td>
+                        <td>@utilityCost.VariableCost1</td>
+                        <td>@utilityCost.VariableCost2</td>
+                        <td>@utilityCost.FixedCost1</td>
+                        <td>@utilityCost.FixedCost2</td>
+                        <td>@utilityCost.DateEffectiveFrom.ToShortDateString()</td>
+                        <td>@utilityCost.DateEffectiveExpiry.GetValueOrDefault().ToShortDateString()</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+

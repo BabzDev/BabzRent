@@ -1,0 +1,74 @@
+﻿@model BabzRent.ViewModels.MeterViewModels.MultiReadingFormViewModel
+
+@{
+    ViewBag.Title = "MeterReadingForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int count = 0;
+    float lastStatus;
+
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+
+<td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+
+<h2>MeterReadingForm</h2>
+
+@using (Html.BeginForm("SaveMultiMeterReading", "Maintenance"))
+{
+    <table class="table table-bordered">
+        @foreach (var property in Model.Properties)
+        {
+            <tr>
+                <td>@property.PropertyName</td>
+                @foreach (var billType in Model.BillTypes)
+                {
+
+                    var meter = Model.Meters.SingleOrDefault(m => m.PropertyId == property.Id & m.BillTypeId == billType.Id);
+                    if (meter != null)
+                    {
+                        var lastReading = Model.CurrentMeterReadings.Where(m => m.MeterId == meter.Id).ToList().LastOrDefault();
+                        if (lastReading != null)
+                        {
+                            lastStatus = lastReading.Status;
+                        }
+                        else
+                        {
+                            lastStatus = 0;
+                        }
+                        var meterReading = new BabzRent.Models.Maintenance.MeterReading()
+                        {
+                            MeterId = meter.Id,
+                            ReadingDate = DateTime.Now,
+                            DateCreated = DateTime.Now,
+                            Status = lastStatus
+                        };
+                        Model.MeterReadings.Add(meterReading);
+                        <td class="form-group">
+                            @Model.BillTypes.Single(m => m.Id == billType.Id).Name
+                            @Html.TextBoxFor(m => m.MeterReadings[count].Status, new { @class = "form-control" })
+                            @Html.HiddenFor(m => m.MeterReadings[count].MeterId)
+                            @Html.TextBoxFor(m => m.MeterReadings[count].ReadingDate, "{0:d/MM/yyyy}", null)
+                            @Html.HiddenFor(m => m.MeterReadings[count].DateCreated)
+                        </td>
+                        count = count + 1;
+                    }
+                    else
+                    {
+                        <td>
+                            @Model.BillTypes.Single(m => m.Id == billType.Id).Name
+                            No Meter
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    </table>
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}

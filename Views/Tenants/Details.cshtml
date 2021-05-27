@@ -1,0 +1,30 @@
+﻿@model BabzRent.Models.Tenants.Tenant
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>@Model.FirstName @Model.LastName @Html.ActionLink("(Edit)", "Edit", "Tenants", new { id = Model.Id }, null)</h2>
+
+<ul>
+    <li>@Html.LabelFor(m => m.Id): @Model.Id</li>
+    <li>
+        @Html.LabelFor(m => m.BirthDate):
+    @if (Model.BirthDate != null)
+    {
+        @Model.BirthDate.Value.ToShortDateString();
+    }
+</li>
+<li>@Html.LabelFor(m => m.ContactNumber): @Model.ContactNumber</li>
+<li>@Html.LabelFor(m => m.Email): @Model.Email</li>
+<li>@Html.LabelFor(m => m.IdNumber): @Model.IdNumber</li>
+</ul>
+

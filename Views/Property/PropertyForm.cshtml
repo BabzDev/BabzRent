@@ -1,0 +1,40 @@
+﻿@model BabzRent.ViewModels.PropertyFormViewModel
+@{
+    ViewBag.Title = "PropertyForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>PropertyForm</h2>
+
+@using (Html.BeginForm("SaveProperty", "Property"))
+{
+    @Html.ValidationSummary()
+    <div class="form-group">
+        @Html.LabelFor(m => m.Property.PropertyNo)
+        @Html.TextBoxFor(m => m.Property.PropertyNo, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Property.PropertyNo)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Property.PropertyLocationId) @Html.ActionLink("(Add New Location)", "NewLocation", "Property", new { id = 1 }, new { target = "_blank" })
+        @Html.DropDownListFor(m => m.Property.PropertyLocationId, new SelectList(Model.Locations, "Id", "ShortCode"), "Select Location", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Property.PropertyLocationId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Property.PropertyTypeId)
+        @Html.DropDownListFor(m => m.Property.PropertyTypeId, new SelectList(Model.PropertyTypes, "Id", "Name"), "Select Property Type", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Property.PropertyTypeId)
+    </div>
+
+    @Html.HiddenFor(m => m.Property.Id)
+    @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-primary">Save</button>
+}

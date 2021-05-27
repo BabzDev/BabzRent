@@ -1,0 +1,45 @@
+﻿@model IEnumerable<BabzRent.Models.Properties.PropertyLocation>
+
+@{
+    ViewBag.Title = "Locations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        <td>@Html.ActionLink("New Location", "NewLocation", "Property", new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+<h2>Locations</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Building Name</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>Country</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var property in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(property.ShortCode, "EditLocation", "Property", new { id = property.Id }, null)</td>
+                <td>@property.BuildingName</td>
+                <td>@property.Street</td>
+                <td>@property.City</td>
+                <td>@property.Country</td>
+            </tr>
+        }
+    </tbody>
+</table>

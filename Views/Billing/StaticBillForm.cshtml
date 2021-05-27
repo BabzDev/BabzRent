@@ -1,0 +1,74 @@
+﻿@model BabzRent.ViewModels.BillingViewModels.BillFormViewModel
+
+@{
+    ViewBag.Title = "StaticBillForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        @if (Model.Bill != null)
+        {
+            <td>@Html.ActionLink("Delete Bill", "DeleteBill", "Billing", new { billId = Model.Bill.Id }, new { @class = "btn btn-primary" })</td>
+        }
+    </tr>
+</table>
+
+
+<h2>Static Bill</h2>
+
+@using (Html.BeginForm("SaveStaticBill", "Billing"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.PropertyId)
+        @Html.DropDownListFor(m => m.Bill.PropertyId, new SelectList(Model.Properties, "Id", "PropertyName"), "Select Property", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.TenancyId)
+        @Html.DropDownListFor(m => m.Bill.TenancyId, new SelectList(Model.Tenancies, "Id", "Name"), "Select Tenancy", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.BillTypeId)
+        @Html.DropDownListFor(m => m.Bill.BillTypeId, new SelectList(Model.BillTypes, "Id", "Name"), "Select Bill Type", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.PeriodFromDate)
+        @Html.TextBoxFor(m => m.Bill.PeriodFromDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.PeriodToDate)
+        @Html.TextBoxFor(m => m.Bill.PeriodToDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.Description) (This will auto populate if empty)
+        @Html.TextBoxFor(m => m.Bill.Description, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.Amount)
+        @Html.TextBoxFor(m => m.Bill.Amount, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.UnitCost) (This will auto populate with Bill Amount if Usage and Unit Cost empty.)
+        @Html.TextBoxFor(m => m.Bill.UnitCost, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.Usage) (This will auto populate with 1 if Usage and Unit Cost empty. )
+        @Html.TextBoxFor(m => m.Bill.Usage, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bill.UnitType) (This will auto populate, only amend to override.)
+        @Html.TextBoxFor(m => m.Bill.UnitType, new { @class = "form-control" })
+    </div>
+    @Html.HiddenFor(m => m.Bill.InvoiceStatusId)
+    @Html.HiddenFor(m => m.Bill.Id)
+    @Html.HiddenFor(m => m.Bill.InvoiceId)
+    <button type="submit" class="btn btn-primary">Save</button>
+}

@@ -1,0 +1,111 @@
+﻿@model BabzRent.ViewModels.ExpensesViewModels.ExpenseFormViewModel
+@{
+    ViewBag.Title = "Expense Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>Expense Form</h2>
+
+@using(Html.BeginForm("SaveExpense", "Expenses")){
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.CompanyId)
+    @Html.DropDownListFor(m => m.Expense.CompanyId, new SelectList(Model.Companies, "Id", "Name"), "Select Company", new { @class = "form-control", @id = "Company" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.ExpenseLocationId)
+    @Html.DropDownListFor(m => m.Expense.ExpenseLocationId, new SelectList(Model.Locations, "Value", "Text"), "Select Location", new { @class = "form-control", @id = "Location" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.Amount)
+    @Html.TextBoxFor(m => m.Expense.Amount, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.ExpenseDate)
+    @Html.TextBoxFor(m => m.Expense.ExpenseDate, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.DateSettled)
+    @Html.TextBoxFor(m => m.Expense.DateSettled, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.Reference)
+    @Html.TextBoxFor(m => m.Expense.Reference, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.Description)
+    @Html.TextBoxFor(m => m.Expense.Description, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.BillableLocationId)
+    @Html.DropDownListFor(m => m.Expense.BillableLocationId, new SelectList(Model.BillableLocations, "Id", "ShortCode"), "", new { @class = "form-control", @id = "BillableLocation" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Expense.BillablePropertyId)
+    @Html.DropDownListFor(m => m.Expense.BillablePropertyId, new SelectList(Model.BillableProperties, "Value", "Text"), "", new { @class = "form-control", @id = "BillableProperty" })
+</div>
+
+@Html.HiddenFor(m => m.Expense.Id)
+@Html.AntiForgeryToken()
+<button type="submit" class="btn btn-primary">Save</button>
+}
+
+
+@section Scripts {
+    <script type="text/javascript">
+            $('#Company').change(function () {
+                var selectedCompany = $("#Company").val();
+                var locationsSelect = $('#Location');
+                locationsSelect.empty();
+                if (selectedCompany != null && selectedCompany != '') {
+                    $.getJSON('@Url.Action("GetCompanyLocations")', { companyId: selectedCompany }, function (locations) {
+                        if (locations != null && !jQuery.isEmptyObject(locations))
+                        {
+                            locationsSelect.append($('<option/>', {
+                                value: null,
+                                text: ""
+                            }));
+                            $.each(locations, function (index, location) {
+                                locationsSelect.append($('<option/>', {
+                                    value: location.value,
+                                    text: location.text
+                                }));
+                            });
+                        };
+                    });
+                }
+            });
+
+            $('#BillableLocation').change(function () {
+                var selectedLocation = $("#BillableLocation").val();
+                var billablePropertySelect = $('#BillableProperty');
+                billablePropertySelect.empty();
+                if (selectedLocation != null && selectedLocation != '') {
+                    $.getJSON('@Url.Action("GetBillableProperties")', { locationId: selectedLocation }, function (properties) {
+                        if (properties != null && !jQuery.isEmptyObject(properties))
+                        {
+                            billablePropertySelect.append($('<option/>', {
+                                value: null,
+                                text: ""
+                            }));
+                            $.each(properties, function (index, properties) {
+                                billablePropertySelect.append($('<option/>', {
+                                    value: properties.value,
+                                    text: properties.text
+                                }));
+                            });
+                        };
+                    });
+                }
+            });
+    </script>
+}

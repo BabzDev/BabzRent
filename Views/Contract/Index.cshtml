@@ -1,0 +1,72 @@
+﻿@model IEnumerable<BabzRent.Models.Contract>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<br>
+
+<table>
+    <tr>
+        <td>@Html.ActionLink("New Contract", "NewContract", "Contract", new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+<h3>Live Contracts</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Contract Version</th>
+            <th>Contract Duration</th>
+            <th>Contract Start Date</th>
+            <th>Contract End Date</th>
+            <th>Payment Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contract in Model.Where(m => m.ContractEndDate >= DateTime.Now || m.ContractEndDate == null).ToList())
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(contract.Tenancy.Property.PropertyName + "/" + contract.Tenancy.MoveInDate.Year.ToString()
+                   + "." + contract.Tenancy.MoveInDate.Month.ToString() + "/" + contract.ContractVersion,
+                   "EditContract", "Contract", new { id = contract.Id }, null)
+                </td>
+                <td>@contract.ContractDuration</td>
+                <td>@contract.ContractStartDate.ToShortDateString()</td>
+                <td>@contract.ContractEndDate.GetValueOrDefault().ToShortDateString()</td>
+                <td>@contract.PaymentAmount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Expired Contracts</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Contract Version</th>
+            <th>Contract Duration</th>
+            <th>Contract Start Date</th>
+            <th>Contract End Date</th>
+            <th>Payment Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contract in Model.Where(m => m.ContractEndDate <= DateTime.Now).ToList())
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(contract.Tenancy.Property.PropertyName + "/" + contract.Tenancy.MoveInDate.Year.ToString()
+                   + "." + contract.Tenancy.MoveInDate.Month.ToString() + "/" + contract.ContractVersion,
+                   "EditContract", "Contract", new { id = contract.Id }, null)
+                </td>
+                <td>@contract.ContractDuration</td>
+                <td>@contract.ContractStartDate.ToShortDateString()</td>
+                <td>@contract.ContractEndDate</td>
+                <td>@contract.PaymentAmount</td>
+            </tr>
+        }
+    </tbody>
+</table>

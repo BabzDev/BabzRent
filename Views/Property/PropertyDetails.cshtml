@@ -1,0 +1,138 @@
+﻿@model BabzRent.ViewModels.PropertyViewModels.PropertyDetailsViewModel
+@using BabzRent.Models.Maintenance
+@using BabzRent.Models.Tenants
+@using BabzRent.Models.Tenancies
+@{
+    var meterReading = new List<MeterReading>();
+    var lastReading = new MeterReading();
+    Tenant tenant1;
+    Tenant tenant2;
+    Tenant tenant3;
+    Tenant tenant4;
+    var tenancyNames = TenancyNames.Get(Model.Tenancies);
+}
+@{
+    ViewBag.Title = "PropertyDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>@Model.Property.PropertyName @Html.ActionLink("(Edit)", "EditProperty", "Property", new { id = Model.Property.Id }, null)</h2>
+
+<h3>Property Type</h3>
+
+<ul>
+    <li>Property Type: @Model.Property.PropertyType.Name</li>
+    <li>Bathrooms: @Model.Property.PropertyType.Bathrooms</li>
+    <li>Bedrooms: @Model.Property.PropertyType.Bedrooms</li>
+</ul>
+
+<h3>Address</h3>
+<ul>
+    <li>Property Name/Number: @Model.Property.PropertyNo</li>
+    <li>Building Number/Name: @Model.Property.PropertyLocation.BuildingName</li>
+    <li>Street Name: @Model.Property.PropertyLocation.Street</li>
+    <li>Address Line 2: @Model.Property.PropertyLocation.AddressLine2</li>
+    <li>City: @Model.Property.PropertyLocation.City</li>
+    <li>Postcode: @Model.Property.PropertyLocation.PostCode</li>
+    <li>@Model.Property.PropertyLocation.Country</li>
+</ul>
+
+<h3>Tenancy</h3>
+<h3>Live Tenancies @Html.ActionLink("(Add Tenancy)", "NewTenancy", "Tenancy", new { propertyId = Model.Property.Id }, null)</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th rowspan="2">Tenancy Id</th>
+            <th rowspan="2">Tenants</th>
+            <th rowspan="2">Move In Date</th>
+            <th rowspan="2">Move out Date</th>
+            <th colspan="3">Contract</th>
+        </tr>
+        <tr>
+            <th>Version</th>
+            <th>Start Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tenancy in Model.Tenancies.Where(m => m.MoveOutDate >= DateTime.Now || m.MoveOutDate == null).ToList())
+        {
+            tenant1 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.TenantId);
+            tenant2 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant2Id);
+            tenant3 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant3Id);
+            tenant4 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant4Id);
+
+            <tr>
+                <td>@Html.ActionLink(tenancyNames.SingleOrDefault(m => m.Id == tenancy.Id).Name, "EditTenancy", "Tenancy", new { id = tenancy.Id }, null)</td>
+                <td>
+                    <ul>@Html.ActionLink(tenant1.FirstName + " " + tenant1.LastName, "Details", "Tenants", new { id = tenancy.TenantId }, null)</ul>
+                    @if (tenancy.Tenant2Id != null)
+                    {<ul>@Html.ActionLink(tenant2.FirstName + " " + tenant2.LastName, "Details", "Tenants", new { id = tenancy.Tenant2Id }, null)</ul>}
+                    @if (tenancy.Tenant3Id != null)
+                    {<ul>@Html.ActionLink(tenant3.FirstName + " " + tenant3.LastName, "Details", "Tenants", new { id = tenancy.Tenant3Id }, null)</ul>}
+                    @if (tenancy.Tenant4Id != null)
+                    {<ul>@Html.ActionLink(tenant4.FirstName + " " + tenant4.LastName, "Details", "Tenants", new { id = tenancy.Tenant4Id }, null)</ul>}
+                </td>
+                <td>@tenancy.MoveInDate.ToShortDateString()</td>
+                <td>@tenancy.MoveOutDate.GetValueOrDefault().ToShortDateString()</td>
+                <td colspan="2">
+                    <table>
+                        <tbody>
+                            @foreach (var contract in Model.Contracts.Where(m => m.TenancyId == tenancy.Id))
+                            {
+                                <tr>
+                                    <td>@Html.ActionLink(contract.ContractVersion.ToString(), "EditContract", "Contract", new { id = contract.Id }, null)</td>
+                                    <td>@contract.ContractStartDate.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<h3>Meters @Html.ActionLink("(Add Meter)", "NewMeter", "Maintenance", new { propertyId = Model.Property.Id }, null)</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Meter Id</th>
+            <th>Meter Type</th>
+            <th>Meter Reading</th>
+            <th>Last Updated</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var meter in Model.Meters)
+        {
+            meterReading = Model.MeterReadings.Where(m => m.MeterId == meter.Id).ToList();
+
+            <tr>
+                <td>@Html.ActionLink(@meter.Id.ToString(), "MeterDetails", "Maintenance", new { id = meter.Id }, null)</td>
+                <td>@meter.BillType.Name</td>
+                @if (meterReading.Count != 0)
+                {
+                    lastReading = meterReading.LastOrDefault();
+                    <td>@Html.ActionLink(lastReading.Status.ToString(), "NewMeterReading", "Maintenance", new { id = meter.Id }, null)</td>
+                    <td>@lastReading.ReadingDate.ToShortDateString()</td>
+                }
+                else
+                {
+                    <td>@Html.ActionLink("No Record", "NewMeterReading", "Maintenance", new { id = meter.Id }, null)</td>
+                    <td>N/A</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

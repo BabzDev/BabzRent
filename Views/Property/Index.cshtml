@@ -1,0 +1,39 @@
+﻿@model BabzRent.ViewModels.PropertyViewModels.PropertyIndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+
+<table>
+    <tr>
+        <td>@Html.ActionLink("Locations", "Locations", "Property", new { @class = "btn btn-primary" })</td>
+        <td>@Html.ActionLink("Add Property", "NewProperty", "Property", new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+<h2>Properties</h2>
+
+@foreach (var location in Model.PropertyLocations)
+{
+    <h3>@location.ShortCode</h3>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Property Id</th>
+                <th>Property Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var property in Model.Properties.Where(m => m.PropertyLocation.Id == location.Id))
+            {
+                <tr>
+                    <td>@Html.ActionLink(@property.PropertyName, "PropertyDetails", "Property", new { id = property.Id }, null)</td>
+                    <td>@property.PropertyType.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

@@ -1,0 +1,17 @@
+﻿
+@{
+    var tenancyName = new BabzRent.Models.Tenancies.TenancyNames();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br>
+
+<table>
+    <tr>
+        <td>@Html.ActionLink("Bills", "Bills", "Billing", new { @class = "btn btn-primary" })</td>
+        <td>@Html.ActionLink("Invoices", "Invoice", "Billing", new { @class = "btn btn-primary" })</td>
+        <td>@Html.ActionLink("Utility Bill Costs", "UtilityBillCosts", "Billing", new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+<h2>Billing</h2>

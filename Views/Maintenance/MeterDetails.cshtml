@@ -1,0 +1,39 @@
+﻿@model BabzRent.ViewModels.MeterViewModels.MeterDetailsViewModel
+
+@{
+    ViewBag.Title = "MeterDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>MeterDetails @Html.ActionLink("(Edit)", "EditMeter", "Maintenance", new { id = Model.Meter.Id }, null)</h2>
+
+
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Reading Date</th>
+            <th>Status</th>
+            <th>Date Created in System</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reading in Model.MeterReadings.OrderByDescending(m => m.ReadingDate))
+        {
+            <tr>
+                <td>@reading.ReadingDate.ToShortDateString()</td>
+                <td>@Html.ActionLink(reading.Status.ToString(), "EditMeterReading", "Maintenance", new { id = reading.Id }, null)</td>
+                <td>@reading.DateCreated.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+
+</table>

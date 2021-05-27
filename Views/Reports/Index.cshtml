@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        <td>@Html.ActionLink("KPIR", "KPIRYearForm", "Reports", new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+

@@ -1,0 +1,62 @@
+﻿@model BabzRent.ViewModels.ExpensesViewModels.ExpenseViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string billableLocation;
+    string billableProperty;
+}
+
+<h1>Index</h1>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        <td>@Html.ActionLink("Add Expense", "NewExpense", "Expenses", new { @class = "btn btn-primary" })</td>
+        <td>@Html.ActionLink("Companies", "Companies", "Expenses", new { @class = "btn btn-primary" })</td>
+    </tr>
+</table>
+
+<h1>Expenses</h1>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>Amount</td>
+            <td>Company</td>
+            <td>Expense Location</td>
+            <td>Expense Date</td>
+            <td>Date Settled</td>
+            <td>Reference</td>
+            <td>Description</td>
+            <td>Billable Location</td>
+            <td>Billable Property</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var expense in Model.Expenses)
+        {
+            billableLocation =  expense.BillableLocation != null ? expense.BillableLocation.ShortCode : null;
+            billableProperty = expense.BillableProperty != null ? expense.BillableProperty.PropertyName : null;
+
+            <tr>
+                <td>@expense.Amount</td>
+                <td>@expense.Company.Name</td>
+                <td>@expense.ExpenseLocation.Address1</td>
+                <td>@expense.ExpenseDate</td>
+                <td>@expense.DateSettled</td>
+                <td>@expense.Reference</td>
+                <td>@expense.Description</td>
+                <td>@billableLocation</td>
+                <td>@billableProperty</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,62 @@
+﻿@model BabzRent.ViewModels.MeterViewModels.MeterFormViewModel
+@{
+    ViewBag.Title = "MeterForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>MeterForm</h2>
+
+@using (Html.BeginForm("SaveMeter", "Maintenance"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Meter.BillTypeId)
+        @Html.DropDownListFor(m => m.Meter.BillTypeId, new SelectList(Model.BillTypes, "Id", "Name"), "Select Meter Type", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Meter.PropertyId)
+        @Html.DropDownListFor(m => m.Meter.PropertyId, new SelectList(Model.Properties, "Id", "PropertyName"), "Select Property", new { @class = "form-control" })
+    </div>
+
+    if (Model.Meter.Id == 0)
+    {
+        <h3>Utility Cost</h3>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.UtilityCosts.VariableCost1)
+            @Html.TextBoxFor(m => m.UtilityCosts.VariableCost1, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UtilityCosts.VariableCost2)
+            @Html.TextBoxFor(m => m.UtilityCosts.VariableCost2, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UtilityCosts.FixedCost1)
+            @Html.TextBoxFor(m => m.UtilityCosts.FixedCost1, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UtilityCosts.FixedCost2)
+            @Html.TextBoxFor(m => m.UtilityCosts.FixedCost1, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UtilityCosts.DateEffectiveFrom)
+            @Html.TextBoxFor(m => m.UtilityCosts.DateEffectiveFrom, "{0:d/MM/yyyy}", new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.UtilityCosts.DateEffectiveExpiry)
+            @Html.TextBoxFor(m => m.UtilityCosts.DateEffectiveExpiry, "{0:d/MM/yyyy}", new { @class = "form-control" })
+        </div>
+        @Html.HiddenFor(m => m.UtilityCosts.Id)
+    }
+
+    @Html.HiddenFor(m => m.Meter.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}

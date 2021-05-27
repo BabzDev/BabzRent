@@ -1,0 +1,33 @@
+﻿@model IEnumerable<BabzRent.Models.Tenants.Tenant>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+</br>
+
+@Html.ActionLink("New Tenant", "New", "Tenants", new { @class = "btn btn-primary" })
+
+<h2>Tenants</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Email</th>
+            <th>Mobile Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tenant in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(tenant.FirstName + " " + tenant.LastName, "Details", "Tenants", new { id = tenant.Id }, null)</td>
+                <td>@tenant.BirthDate.GetValueOrDefault().ToShortDateString()</td>
+                <td>@tenant.Email</td>
+                <td>@tenant.ContactNumber</td>
+            </tr>
+        }
+    </tbody>
+
+</table> 

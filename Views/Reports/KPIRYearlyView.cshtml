@@ -1,0 +1,57 @@
+﻿@model BabzRent.ViewModels.ReportsViewModels.KPIRViewModel
+@{
+    ViewBag.Title = "KPIRYearlyView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+@{ if (ViewBag.ReportingYear != null)
+    {<h2>KPIR - @ViewBag.Location - @ViewBag.ReportingYear</h2>}
+else
+{<h2>KPIR - @ViewBag.Location</h2> }}
+
+@{
+    if (Model.KPIRs != null) 
+    {
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <td>Date</td>
+                    <td>Reference</td>
+                    <td>Name</td>
+                    <td>Address</td>
+                    <td>Description</td>
+                    <td>Income</td>
+                    <td>Expense</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kpir in Model.KPIRs)
+                {
+                <tr>
+                    <td>@kpir.Date</td>
+                    <td>@kpir.Reference</td>
+                    <td>@kpir.Name</td>
+                    <td>@kpir.Address</td>
+                    <td>@kpir.Description</td>
+                    <td>@kpir.Income</td>
+                    <td>@kpir.Expense</td>
+                </tr>
+                }
+            </tbody>
+
+        </table>}
+    else
+    {
+        <p>No results for the current selection.</p>
+    }
+}

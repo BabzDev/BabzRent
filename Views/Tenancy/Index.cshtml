@@ -1,0 +1,183 @@
+﻿@model BabzRent.ViewModels.TenancyIndexViewModel
+@using BabzRent.Models.Tenants
+@using BabzRent.Models.Tenancies
+@{ Tenant tenant1;
+    Tenant tenant2;
+    Tenant tenant3;
+    Tenant tenant4;
+}
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br/>
+
+@Html.ActionLink("New Tenancy", "NewTenancy", "Tenancy", new { @class = "btn btn-primary" })
+
+<h3>Live Tenancies</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th rowspan="2">Tenancy Id</th>
+            <th rowspan="2">Tenants</th>
+            <th rowspan="2">Move In Date</th>
+            <th rowspan="2">Move out Date</th>
+            <th colspan="3">Contract</th>
+        </tr>
+        <tr>
+            <th>Version</th>
+            <th>Start Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tenancy in Model.Tenancies.Where(m => m.MoveInDate <= DateTime.Now
+            & (m.MoveOutDate >= DateTime.Now || m.MoveOutDate == null)).ToList())
+        {
+            tenant1 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.TenantId);
+            tenant2 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant2Id);
+            tenant3 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant3Id);
+            tenant4 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant4Id);
+
+            <tr>
+                <td>@Html.ActionLink(Model.TenancyNames.SingleOrDefault(m => m.Id == tenancy.Id).Name, "EditTenancy", "Tenancy", new { id = tenancy.Id }, null)</td>
+                <td>
+                    <ul>@Html.ActionLink(tenant1.FirstName + " " + tenant1.LastName, "Details", "Tenants", new { id = tenancy.TenantId }, null)</ul>
+                    @if (tenancy.Tenant2Id != null)
+                    {<ul>@Html.ActionLink(tenant2.FirstName + " " + tenant2.LastName, "Details", "Tenants", new { id = tenancy.Tenant2Id }, null)</ul>}
+                    @if (tenancy.Tenant3Id != null)
+                    {<ul>@Html.ActionLink(tenant3.FirstName + " " + tenant3.LastName, "Details", "Tenants", new { id = tenancy.Tenant3Id }, null)</ul>}
+                    @if (tenancy.Tenant4Id != null)
+                    {<ul>@Html.ActionLink(tenant4.FirstName + " " + tenant4.LastName, "Details", "Tenants", new { id = tenancy.Tenant4Id }, null)</ul>}
+                </td>
+                <td>@tenancy.MoveInDate.ToShortDateString()</td>
+                <td>@tenancy.MoveOutDate.GetValueOrDefault().ToShortDateString()</td>
+                <td colspan="2">
+                    <table>
+                        <tbody>
+                            @foreach (var contract in Model.Contracts.Where(m => m.TenancyId == tenancy.Id))
+                            {
+                                <tr>
+                                    <td>@Html.ActionLink(contract.ContractVersion.ToString(), "EditContract", "Contract", new { id = contract.Id }, null)</td>
+                                    <td>@contract.ContractStartDate.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Future Tenancies</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th rowspan="2">Tenancy Id</th>
+            <th rowspan="2">Tenants</th>
+            <th rowspan="2">Move In Date</th>
+            <th rowspan="2">Move out Date</th>
+            <th colspan="3">Contract</th>
+        </tr>
+        <tr>
+            <th>Version</th>
+            <th>Start Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tenancy in Model.Tenancies.Where(m => m.MoveInDate > DateTime.Now
+            & (m.MoveOutDate >= DateTime.Now || m.MoveOutDate == null)).ToList())
+        {
+            tenant1 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.TenantId);
+            tenant2 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant2Id);
+            tenant3 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant3Id);
+            tenant4 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant4Id);
+
+            <tr>
+                <td>@Html.ActionLink(Model.TenancyNames.SingleOrDefault(m => m.Id == tenancy.Id).Name, "EditTenancy", "Tenancy", new { id = tenancy.Id }, null)</td>
+                <td>
+                    <ul>@Html.ActionLink(tenant1.FirstName + " " + tenant1.LastName, "Details", "Tenants", new { id = tenancy.TenantId }, null)</ul>
+                    @if (tenancy.Tenant2Id != null)
+                    {<ul>@Html.ActionLink(tenant2.FirstName + " " + tenant2.LastName, "Details", "Tenants", new { id = tenancy.Tenant2Id }, null)</ul>}
+                    @if (tenancy.Tenant3Id != null)
+                    {<ul>@Html.ActionLink(tenant3.FirstName + " " + tenant3.LastName, "Details", "Tenants", new { id = tenancy.Tenant3Id }, null)</ul>}
+                    @if (tenancy.Tenant4Id != null)
+                    {<ul>@Html.ActionLink(tenant4.FirstName + " " + tenant4.LastName, "Details", "Tenants", new { id = tenancy.Tenant4Id }, null)</ul>}
+                </td>
+                <td>@tenancy.MoveInDate.ToShortDateString()</td>
+                <td>@tenancy.MoveOutDate.GetValueOrDefault().ToShortDateString()</td>
+                <td colspan="2">
+                    <table>
+                        <tbody>
+                            @foreach (var contract in Model.Contracts.Where(m => m.TenancyId == tenancy.Id))
+                            {
+                                <tr>
+                                    <td>@Html.ActionLink(contract.ContractVersion.ToString(), "EditContract", "Contract", new { id = contract.Id }, null)</td>
+                                    <td>@contract.ContractStartDate.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Closed Tenancies</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th rowspan="2">Tenancy Id</th>
+            <th rowspan="2">Tenants</th>
+            <th rowspan="2">Move In Date</th>
+            <th rowspan="2">Move out Date</th>
+            <th colspan="3">Contract</th>
+        </tr>
+        <tr>
+            <th>Version</th>
+            <th>Start Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tenancy in Model.Tenancies.Where(m => m.MoveOutDate <= DateTime.Now).ToList())
+        {
+            tenant1 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.TenantId);
+            tenant2 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant2Id);
+            tenant3 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant3Id);
+            tenant4 = @Model.Tenants.SingleOrDefault(m => m.Id == tenancy.Tenant4Id);
+
+            <tr>
+                <td>@Html.ActionLink(Model.TenancyNames.SingleOrDefault(m => m.Id == tenancy.Id).Name, "EditTenancy", "Tenancy", new { id = tenancy.Id }, null)</td>
+                <td>
+                    <ul>@Html.ActionLink(tenant1.FirstName + " " + tenant1.LastName, "Details", "Tenants", new { id = tenancy.TenantId }, null)</ul>
+                    @if (tenancy.Tenant2Id != null)
+                    {<ul>@Html.ActionLink(tenant2.FirstName + " " + tenant2.LastName, "Details", "Tenants", new { id = tenancy.Tenant2Id }, null)</ul>}
+                    @if (tenancy.Tenant3Id != null)
+                    {<ul>@Html.ActionLink(tenant3.FirstName + " " + tenant3.LastName, "Details", "Tenants", new { id = tenancy.Tenant3Id }, null)</ul>}
+                    @if (tenancy.Tenant4Id != null)
+                    {<ul>@Html.ActionLink(tenant4.FirstName + " " + tenant4.LastName, "Details", "Tenants", new { id = tenancy.Tenant4Id }, null)</ul>}
+                </td>
+                <td>@tenancy.MoveInDate.ToShortDateString()</td>
+                <td>@tenancy.MoveOutDate.GetValueOrDefault().ToShortDateString()</td>
+                <td colspan="2">
+                    <table>
+                        <tbody>
+                            @foreach (var contract in Model.Contracts.Where(m => m.TenancyId == tenancy.Id))
+                            {
+                                <tr>
+                                    <td>@Html.ActionLink(contract.ContractVersion.ToString(), "EditContract", "Contract", new { id = contract.Id }, null)</td>
+                                    <td>@contract.ContractStartDate.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

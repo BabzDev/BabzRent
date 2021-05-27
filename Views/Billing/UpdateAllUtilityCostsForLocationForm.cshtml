@@ -1,0 +1,54 @@
+﻿@model BabzRent.ViewModels.BillingViewModels.UpdateAllUtilityCostsForLocationFormViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>Update Utility Cost for Property</h2>
+
+@using (Html.BeginForm("UpdateAllUtilityCostsForLocationSave", "Billing"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.UtilityCostsUpdate.LocationId)
+        @Html.DropDownListFor(m => m.UtilityCostsUpdate.LocationId, new SelectList(Model.PropertyLocations, "Id", "ShortCode"), "Select Property Location", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.UtilityCostsUpdate.BillTypeId)
+        @Html.DropDownListFor(m => m.UtilityCostsUpdate.BillTypeId, new SelectList(Model.BillTypes, "Id", "Name"), "Select Bill Type", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.UtilityCostsUpdate.VariableCost1)
+        @Html.TextBoxFor(m => m.UtilityCostsUpdate.VariableCost1, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.UtilityCostsUpdate.VariableCost2)
+        @Html.TextBoxFor(m => m.UtilityCostsUpdate.VariableCost2, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.UtilityCostsUpdate.FixedCost1)
+        @Html.TextBoxFor(m => m.UtilityCostsUpdate.FixedCost1, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.UtilityCostsUpdate.FixedCost2)
+        @Html.TextBoxFor(m => m.UtilityCostsUpdate.FixedCost2, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.UtilityCostsUpdate.DateEffectiveFrom)
+        @Html.TextBoxFor(m => m.UtilityCostsUpdate.DateEffectiveFrom, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.UtilityCostsUpdate.DateEffectiveTo)
+        @Html.TextBoxFor(m => m.UtilityCostsUpdate.DateEffectiveTo, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+}

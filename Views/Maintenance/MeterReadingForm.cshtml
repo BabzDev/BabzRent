@@ -1,0 +1,35 @@
+﻿@model BabzRent.ViewModels.MeterViewModels.MeterReadingFormViewModel
+
+@{
+    ViewBag.Title = "MeterReadingForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>MeterReadingForm</h2>
+
+@using (Html.BeginForm("SaveMeterReading", "Maintenance"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.MeterReading.MeterId)
+        @Html.DropDownListFor(m => m.MeterReading.MeterId, new SelectList(Model.Meters, "Id", "Name"), "Select Meter", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MeterReading.Status)
+        @Html.TextBoxFor(m => m.MeterReading.Status, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MeterReading.ReadingDate)
+        @Html.TextBoxFor(m => m.MeterReading.ReadingDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    @Html.HiddenFor(m => m.MeterReading.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}

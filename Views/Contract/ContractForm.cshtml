@@ -1,0 +1,49 @@
+﻿@model BabzRent.ViewModels.ContractFormViewModel
+
+@{
+    ViewBag.Title = "ContractForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+
+<td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+
+<h2>Contract </h2>
+
+@using (Html.BeginForm("Save", "Contract"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Contract.TenancyId)
+        @Html.DropDownListFor(m => m.Contract.TenancyId, new SelectList(Model.Tenancies, "Id", "Name"), "Select Property", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Contract.ContractStartDate)
+        @Html.TextBoxFor(m => m.Contract.ContractStartDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Contract.ContractDuration)
+        @Html.TextBoxFor(m => m.Contract.ContractDuration, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Contract.ContractEndDate) (This will auto populate)
+        @Html.TextBoxFor(m => m.Contract.ContractEndDate, "{0:d/MM/yyyy}", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Contract.BillingDate)
+        @Html.TextBoxFor(m => m.Contract.BillingDate, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Contract.PaymentAmount)
+        @Html.TextBoxFor(m => m.Contract.PaymentAmount, new { @class = "form-control" })
+    </div>
+
+    @Html.HiddenFor(m => m.Contract.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}

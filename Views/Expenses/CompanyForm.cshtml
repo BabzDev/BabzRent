@@ -1,0 +1,65 @@
+﻿@model BabzRent.ViewModels.ExpensesViewModels.CompanyFormViewModel
+@{
+    ViewBag.Title = "NewCompany";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<br>
+<p class="btn btn-primary" onclick="goBack()"><< Back</p>
+
+<h2>CompanyForm</h2>
+
+@using (@Html.BeginForm("SaveCompany", "Expenses")) {
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Company.Name)
+    @Html.TextBoxFor(m => m.Company.Name, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Company.VATReference)
+    @Html.TextBoxFor(m => m.Company.VATReference, new { @class = "form-control" })
+</div>
+@Html.HiddenFor(m => m.Company.Id)
+
+@if (Model.Company.Id == 0)
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.CompanyLocation.Address1)
+        @Html.TextBoxFor(m => m.CompanyLocation.Address1, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CompanyLocation.Address2)
+        @Html.TextBoxFor(m => m.CompanyLocation.Address2, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CompanyLocation.Address3)
+        @Html.TextBoxFor(m => m.CompanyLocation.Address3, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CompanyLocation.City)
+        @Html.TextBoxFor(m => m.CompanyLocation.City, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CompanyLocation.County)
+        @Html.TextBoxFor(m => m.CompanyLocation.County, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CompanyLocation.PostCode)
+        @Html.TextBoxFor(m => m.CompanyLocation.PostCode, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CompanyLocation.Country)
+        @Html.TextBoxFor(m => m.CompanyLocation.Country, new { @class = "form-control" })
+    </div>
+    @Html.HiddenFor(m => m.CompanyLocation.Id)
+}
+
+@Html.AntiForgeryToken()
+<button type="submit" class="btn btn-primary">Save</button>
+}

@@ -1,0 +1,66 @@
+﻿@model BabzRent.ViewModels.BillingViewModels.InvoiceViewModel
+
+@{
+    ViewBag.Title = "Invoice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+</br>
+
+<table>
+    <tr>
+        <td><p class="btn btn-primary" onclick="goBack()"><< Back</p></td>
+        @if (ViewBag.Title != "Archive")
+        {
+            <td>@Html.ActionLink("Create Invoices at Location", "InvoicesForLocationForm", "Billing", new { @class = "btn btn-primary" })</td>
+            <td>@Html.ActionLink("Create Invoice", "CreateInvoiceForm", "Billing", new { @class = "btn btn-primary" })</td>
+            <td>@Html.ActionLink("Invoice Archive", "InvoiceArchive", "Billing", new { @class = "btn btn-primary" })</td>
+        }
+        </tr>
+</table>
+
+<h2>Invoice - @ViewBag.Title</h2>
+
+@foreach (var location in Model.Locations)
+{
+    <h2>@location.ShortCode</h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td>Bill Id</td>
+                <td>Reference</td>
+                <td>Tenancy</td>
+                <td>Amount</td>
+                <td>Date Created</td>
+                <td>Due Date</td>
+                <td>Issued</td>
+                <td>Settled</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var property in Model.Properties.Where(p => p.PropertyLocationId == location.Id))
+            {
+                foreach (var invoice in Model.Invoices.Where(b => b.Tenancy.PropertyId == property.Id)
+                    .OrderBy(b => b.DateCreated).OrderBy(b => b.DateIssued).ToList())
+                {
+                    <tr>
+                        <td>@Html.ActionLink(invoice.Id.ToString(), "ViewInvoice", "Billing", new { id = invoice.Id }, null)</td>
+                        <td>@invoice.Reference</td>
+                        <td>@Model.Tenancies.Single(t => t.Id == invoice.TenancyId).Name</td>
+                        <td>@invoice.Amount</td>
+                        <td>@invoice.DateCreated.ToShortDateString()</td>
+                        <td>@invoice.DueDate.ToShortDateString()</td>
+                        <td>@invoice.DateIssued</td>
+                        <td>@invoice.DateSettled</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
